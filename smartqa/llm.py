@@ -19,7 +19,13 @@ class LLMResponseGenerator:
             }
         
         context = self._build_context(relevant_chunks)
-        prompt = f"Using ONLY the context below, answer the user's question. Keep your answer under 200 words.\n\nContext:\n{context}\n\nQuestion: {query}\n\nAnswer:"
+        prompt = (
+            "Using ONLY the context below, answer the user's question. "
+            "Keep your answer under 50 words. "
+            "Answer in one or two sentences. "
+            "Always respond in English.\n\n"
+            f"Context:\n{context}\n\nQuestion: {query}\n\nAnswer:"
+        )
         
         try:
             response = requests.post(
@@ -30,7 +36,7 @@ class LLMResponseGenerator:
                     "stream": False,
                     "options": {
                         "temperature": 0.3,
-                        "num_predict": 400
+                        "num_predict": 100
                     }
                 },
                 timeout=30
