@@ -1,0 +1,9 @@
+La inteligencia artificial (IA) es una rama de la informática que busca crear sistemas capaces de realizar tareas que normalmente requieren inteligencia humana.
+
+El machine learning es una subcategoría de la IA que permite a las computadoras aprender y mejorar automáticamente sin ser programadas explícitamente. Los algoritmos de machine learning construyen un modelo matemático basado en datos de muestra para hacer predicciones o decisiones.
+
+Los chatbots son programas de IA diseñados para simular conversaciones humanas. Utilizan procesamiento de lenguaje natural para entender y responder a las consultas de los usuarios. Los chatbots modernos pueden manejar consultas complejas y proporcionar respuestas útiles.
+
+Los embeddings son representaciones vectoriales de texto que capturan el significado semántico de las palabras y frases. Estos vectores permiten a las computadoras entender las relaciones entre diferentes conceptos y realizar búsquedas semánticas.
+
+El deep learning es una técnica de machine learning que utiliza redes neuronales artificiales con múltiples capas para modelar y entender patrones complejos en los datos. Es especialmente efectivo para tareas como reconocimiento de imágenes, procesamiento de lenguaje natural y traducción automática. 
