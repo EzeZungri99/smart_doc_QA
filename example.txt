@@ -1,9 +1,9 @@
-La inteligencia artificial (IA) es una rama de la informática que busca crear sistemas capaces de realizar tareas que normalmente requieren inteligencia humana.
+Artificial Intelligence (AI) is a branch of computer science that seeks to create systems capable of performing tasks that normally require human intelligence.
 
-El machine learning es una subcategoría de la IA que permite a las computadoras aprender y mejorar automáticamente sin ser programadas explícitamente. Los algoritmos de machine learning construyen un modelo matemático basado en datos de muestra para hacer predicciones o decisiones.
+Machine learning is a subcategory of AI that enables computers to learn and improve automatically without being explicitly programmed. Machine learning algorithms build a mathematical model based on sample data to make predictions or decisions.
 
-Los chatbots son programas de IA diseñados para simular conversaciones humanas. Utilizan procesamiento de lenguaje natural para entender y responder a las consultas de los usuarios. Los chatbots modernos pueden manejar consultas complejas y proporcionar respuestas útiles.
+Chatbots are AI programs designed to simulate human conversations. They use natural language processing to understand and respond to user queries. Modern chatbots can handle complex queries and provide helpful responses.
 
-Los embeddings son representaciones vectoriales de texto que capturan el significado semántico de las palabras y frases. Estos vectores permiten a las computadoras entender las relaciones entre diferentes conceptos y realizar búsquedas semánticas.
+Embeddings are vector representations of text that capture the semantic meaning of words and phrases. These vectors allow computers to understand relationships between different concepts and perform semantic searches.
 
-El deep learning es una técnica de machine learning que utiliza redes neuronales artificiales con múltiples capas para modelar y entender patrones complejos en los datos. Es especialmente efectivo para tareas como reconocimiento de imágenes, procesamiento de lenguaje natural y traducción automática. 
+Deep learning is a machine learning technique that uses artificial neural networks with multiple layers to model and understand complex patterns in data. It is particularly effective for tasks such as image recognition, natural language processing, and machine translation. 
