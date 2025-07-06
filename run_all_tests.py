@@ -53,6 +53,7 @@ def main():
         from tests.test_retriever import test_retriever_with_chunker_and_embedder
         from tests.test_llm import test_llm_with_relevant_answer, test_llm_without_relevant_answer, test_llm_with_empty_chunks
         from tests.test_cli import test_cli_help, test_cli_missing_input, test_cli_file_not_found, test_cli_basic_functionality
+        from tests.test_logger import test_logger_creation, test_log_interaction, test_get_stats_empty, test_get_stats_with_data, test_logger_with_citations
     except ImportError as e:
         print(f"❌ Error importing tests: {e}")
         return
@@ -68,6 +69,11 @@ def main():
         ("CLI missing input", test_cli_missing_input),
         ("CLI file not found", test_cli_file_not_found),
         ("CLI basic functionality", test_cli_basic_functionality),
+        ("Logger creation", test_logger_creation),
+        ("Logger interaction", test_log_interaction),
+        ("Logger empty stats", test_get_stats_empty),
+        ("Logger stats with data", test_get_stats_with_data),
+        ("Logger with citations", test_logger_with_citations),
     ]
     
     passed = 0
