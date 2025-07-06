@@ -18,18 +18,27 @@ class LLMResponseGenerator:
         
         if not relevant_chunks:
             return {
-                "answer": "No relevant information found to answer your question.",
+                "answer": "I don't have information about this topic in the provided document.",
                 "citations": [],
-                "tokens_used": 0
+                "tokens_used": 0,
+                "latency_ms": 0
             }
         
         context = self._build_context(relevant_chunks)
         prompt = (
-            "Using ONLY the context below, answer the user's question. "
-            "Keep your answer under 50 words. "
-            "Answer in one or two sentences. "
-            "Always respond in English.\n\n"
-            f"Context:\n{context}\n\nQuestion: {query}\n\nAnswer:"
+            "You are a document Q&A assistant. Your job is to answer questions based ONLY on the provided context.\n\n"
+            "CRITICAL: If the question is about ANYTHING not explicitly mentioned in the context below, respond with:\n"
+            "'I don't have information about this topic in the provided document.'\n\n"
+            "This includes:\n"
+            "- Personal questions (What's your favorite color?)\n"
+            "- External facts (What's the weather in Uganda?)\n"
+            "- Opinions (What do you think about...?)\n"
+            "- Current events (What happened yesterday?)\n"
+            "- Any topic not in the document\n\n"
+            "Format: Under 50 words, 1-2 sentences, English only.\n\n"
+            f"Context:\n{context}\n\n"
+            f"Question: {query}\n\n"
+            "Answer:"
         )
         
         try:
@@ -44,13 +53,16 @@ class LLMResponseGenerator:
                         "num_predict": 100
                     }
                 },
-                timeout=30
+                timeout=45
             )
             
             if response.status_code == 200:
                 result = response.json()
                 answer = result.get("response", "").strip()
                 tokens_used = result.get("eval_count", 0)
+                
+                if not answer or answer.lower().startswith("i don't have") or "no information" in answer.lower():
+                    answer = "I don't have information about this topic in the provided document."
             else:
                 raise Exception(f"Ollama API error: {response.status_code}")
             
