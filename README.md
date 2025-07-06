@@ -10,11 +10,14 @@ This system processes documents through several steps:
 2. **Embedding Generation**: Converts text chunks into numerical vectors that capture meaning
 3. **Semantic Search**: Finds the most relevant chunks for any question using vector similarity
 4. **Answer Generation**: Uses Ollama (local LLM) to generate answers based on relevant context
+5. **Logging**: Tracks tokens, latency, and usage statistics automatically
 
 ### Technical Flow
 
 ```
 Document → Chunks → Embeddings → Search Index → Question → Relevant Chunks → LLM → Answer
+                ↓
+            QALogger → qa_history.jsonl
 ```
 
 ## Features
@@ -23,6 +26,10 @@ Document → Chunks → Embeddings → Search Index → Question → Relevant Ch
 - **Semantic Embeddings**: Uses Sentence Transformers for vector representations
 - **Semantic Search**: Finds relevant information using FAISS
 - **Answer Generation**: Uses Ollama (local) to generate context-based answers
+- **Citation Tracking**: Get source chunks with relevance scores
+- **Comprehensive Logging**: Track tokens, latency, and usage statistics
+- **Interactive Mode**: REPL interface for multiple questions
+- **Performance Monitoring**: Real-time response times and token usage
 - **No Virtual Environment**: Works directly with system Python
 - **English Responses**: All answers are generated in English
 
@@ -61,6 +68,9 @@ python3 smartqa.py --input document.txt --ask "What is artificial intelligence?"
 
 # Interactive mode
 python3 smartqa.py --input document.txt
+
+# View statistics
+python3 smartqa.py --stats
 ```
 
 ### Interactive Mode
@@ -75,6 +85,7 @@ The interactive mode allows you to have a conversation with your document. It's 
 
 #### Commands:
 - Type your question and press Enter
+- Type `stats` to show system statistics
 - Type `exit`, `quit`, or `q` to exit
 - Press `Ctrl+C` to force exit
 
@@ -82,12 +93,18 @@ The interactive mode allows you to have a conversation with your document. It's 
 ```bash
 ❓ Question: What is artificial intelligence?
 📝 ANSWER: Artificial intelligence (AI) is a branch of computer science...
+🔢 Tokens used: 45
+⏱️  Response time: 1234ms
 
-❓ Question: How does machine learning work?
-📝 ANSWER: Machine learning is a subcategory of AI that allows computers...
-
-❓ Question: What are the applications of AI?
-📝 ANSWER: AI has various applications including chatbots, natural language...
+❓ Question: stats
+📊 QA System Statistics:
+========================================
+Total interactions: 3
+Total tokens used: 156
+Total cost: $0.0000
+Average latency: 987ms
+Log file: qa_history.jsonl
+========================================
 
 ❓ Question: exit
 👋 Goodbye!
@@ -96,6 +113,7 @@ The interactive mode allows you to have a conversation with your document. It's 
 #### When to use each mode:
 - **`--ask` mode**: For a quick, specific question
 - **Interactive mode**: For exploring the document with multiple questions
+- **`--stats` mode**: For viewing usage statistics
 
 ### Programmatic Usage
 
@@ -125,6 +143,8 @@ llm = LLMResponseGenerator()
 response = llm.generate_response(query, results)
 
 print(response["answer"])
+print(f"Tokens used: {response['tokens_used']}")
+print(f"Response time: {response.get('latency_ms', 0)}ms")
 ```
 
 ## Testing
@@ -153,6 +173,9 @@ python3 -c "from tests.test_retriever import test_retriever_with_chunker_and_emb
 
 # Test LLM
 python3 -c "from tests.test_llm import test_llm_with_relevant_answer; test_llm_with_relevant_answer()"
+
+# Test logger
+python3 -c "from tests.test_logger import test_log_interaction; test_log_interaction()"
 ```
 
 ### Test Components
@@ -163,6 +186,7 @@ Each component can be tested independently:
 - **Embedder**: Converts text to vectors
 - **Retriever**: Finds relevant chunks
 - **LLM**: Generates answers
+- **Logger**: Tracks interactions and statistics
 
 ## Ollama Setup
 
@@ -188,17 +212,21 @@ smart_doc_QA/
 │   ├── chunker.py           # Text chunking
 │   ├── embedder.py          # Embedding generation
 │   ├── retriever.py         # Semantic search
-│   └── llm.py              # Answer generation
+│   ├── llm.py              # Answer generation
+│   └── logger.py           # Logging system
 ├── tests/                   # Unit tests
 │   ├── test_chunker.py
 │   ├── test_embedder.py
 │   ├── test_retriever.py
-│   └── test_llm.py
+│   ├── test_llm.py
+│   ├── test_logger.py
+│   └── test_cli.py
 ├── smartqa.py              # CLI interface
 ├── run_all_tests.py        # Test runner
 ├── example.txt             # Sample document
 ├── requirements.txt        # Dependencies
 ├── pyproject.toml         # Project configuration
+├── qa_history.jsonl       # Interaction logs
 └── README.md
 ```
 
@@ -232,4 +260,7 @@ python3 smartqa.py --input chapter2.txt --ask "What are neural networks?"
 # Use interactive mode for multiple questions (avoids reloading models)
 python3 smartqa.py --input document.txt
 # Then ask multiple questions in the interactive session
+
+# View usage statistics
+python3 smartqa.py --stats
 ```

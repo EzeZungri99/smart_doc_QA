@@ -8,6 +8,7 @@ import argparse
 import sys
 from pathlib import Path
 from smartqa import TextChunker, Embedder, Retriever, LLMResponseGenerator
+from smartqa.logger import QALogger
 
 
 def load_text_file(file_path: str) -> str:
@@ -39,7 +40,7 @@ def setup_qa_system(text: str):
     return retriever
 
 
-def ask_question(retriever, question: str):
+def ask_question(retriever, question: str, input_file: str = "unknown"):
     print(f"\n❓ Question: {question}")
     print("🔍 Searching for relevant information...")
     
@@ -53,13 +54,14 @@ def ask_question(retriever, question: str):
     
     print("🤖 Generating response...")
     llm = LLMResponseGenerator()
-    response = llm.generate_response(question, search_results)
+    response = llm.generate_response(question, search_results, input_file)
     
     print("\n" + "="*60)
     print("📝 ANSWER:")
     print("="*60)
     print(response["answer"])
     print(f"\n🔢 Tokens used: {response['tokens_used']}")
+    print(f"⏱️  Response time: {response.get('latency_ms', 0)}ms")
     
     if response["citations"]:
         print(f"\n📚 Sources ({len(response['citations'])}):")
@@ -68,11 +70,11 @@ def ask_question(retriever, question: str):
             print(f"      Relevance: {citation['relevance_score']}")
 
 
-def interactive_mode(retriever):
+def interactive_mode(retriever, input_file: str):
     print("\n" + "="*60)
     print("🎯 INTERACTIVE MODE")
     print("="*60)
-    print("Type your questions (or 'exit' to quit):")
+    print("Type your questions (or 'exit' to quit, 'stats' for statistics):")
     
     while True:
         try:
@@ -81,11 +83,15 @@ def interactive_mode(retriever):
             if question.lower() in ['exit', 'quit', 'q']:
                 print("👋 Goodbye!")
                 break
+            elif question.lower() == 'stats':
+                logger = QALogger()
+                logger.print_stats()
+                continue
             
             if not question:
                 continue
             
-            ask_question(retriever, question)
+            ask_question(retriever, question, input_file)
             
         except KeyboardInterrupt:
             print("\n👋 Goodbye!")
@@ -103,13 +109,13 @@ def main():
 Usage examples:
   python3 smartqa.py --input document.txt --ask "What is AI?"
   python3 smartqa.py --input document.txt
+  python3 smartqa.py --stats
         """
     )
     
     parser.add_argument(
         "--input", 
-        required=True,
-        help="Text file to process (required)"
+        help="Text file to process (required unless --stats)"
     )
     
     parser.add_argument(
@@ -117,10 +123,25 @@ Usage examples:
         help="Specific question to answer (optional, enters interactive mode if not provided)"
     )
     
+    parser.add_argument(
+        "--stats",
+        action="store_true",
+        help="Show system statistics"
+    )
+    
     args = parser.parse_args()
     
+    if args.stats:
+        logger = QALogger()
+        logger.print_stats()
+        return
+    
+    if not args.input:
+        print("❌ Error: --input is required (use --stats to see statistics)")
+        sys.exit(1)
+    
     if not Path(args.input).exists():
-        print(f"❌ Error: File '{args.input}' does not exist")
+        print(f"❌ Error: File '{args.input}' not found")
         sys.exit(1)
     
     print("🚀 Smart Document QA")
@@ -133,9 +154,13 @@ Usage examples:
     retriever = setup_qa_system(text)
     
     if args.ask:
-        ask_question(retriever, args.ask)
+        ask_question(retriever, args.ask, args.input)
     else:
-        interactive_mode(retriever)
+        interactive_mode(retriever, args.input)
+    
+    print("\n" + "="*60)
+    logger = QALogger()
+    logger.print_stats()
 
 
 if __name__ == "__main__":
