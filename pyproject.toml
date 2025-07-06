@@ -1,41 +1,21 @@
-[build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[project]
+[tool.poetry]
 name = "smart-doc-qa"
 version = "0.1.0"
-description = "Sistema de preguntas y respuestas sobre documentos usando embeddings y búsqueda semántica"
-authors = [{name = "EzeZungri", email = "ezezungri@gmail.com"}]
+description = "Document question and answer system using embeddings and semantic search"
+authors = ["EzeZungri <ezezungri@gmail.com>"]
 readme = "README.md"
-requires-python = ">=3.9"
-classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-]
 
-dependencies = [
-    "sentence-transformers>=2.2.0",
-    "faiss-cpu>=1.7.0",
-    "numpy>=1.24.0",
-    "requests>=2.25.0",
-    "pytest>=7.0.0",
-]
+[tool.poetry.dependencies]
+python = ">=3.11,<4.0"
+sentence-transformers = "^2.2.0"
+faiss-cpu = "^1.7.0"
+numpy = "^1.24.0"
+requests = "^2.25.0"
+streamlit = "^1.28.0"
 
-[project.optional-dependencies]
-dev = [
-    "streamlit>=1.28.0",
-    "openai>=1.0.0",
-    "python-dotenv>=1.0.0",
-    "tiktoken>=0.5.0",
-]
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.0.0"
 
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-python_files = ["test_*.py"] 
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
