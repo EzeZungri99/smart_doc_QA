@@ -1,6 +1,7 @@
+import os
+import time
 import requests
 import json
-import time
 from typing import Any
 from .chunker import Chunk
 from .logger import QALogger
@@ -8,11 +9,11 @@ from .logger import QALogger
 
 class LLMResponseGenerator:
     
-    def __init__(self, model: str = "llama2", base_url: str = "http://localhost:11434"):
-        self.model = model
+    def __init__(self, model: str = None, base_url: str = "http://localhost:11434"):
+        self.model = model or os.getenv('OLLAMA_MODEL', 'llama2')
         self.base_url = base_url
         self.logger = QALogger()
-    
+
     def generate_response(self, query: str, relevant_chunks: list[tuple[Chunk, float]], input_file: str = "unknown") -> dict[str, Any]:
         start_time = time.time()
         
@@ -23,7 +24,7 @@ class LLMResponseGenerator:
                 "tokens_used": 0,
                 "latency_ms": 0
             }
-        
+
         context = self._build_context(relevant_chunks)
         prompt = (
             "You are a document Q&A assistant. Your job is to answer questions based ONLY on the provided context.\n\n"
@@ -40,7 +41,7 @@ class LLMResponseGenerator:
             f"Question: {query}\n\n"
             "Answer:"
         )
-        
+
         try:
             response = requests.post(
                 f"{self.base_url}/api/generate",
