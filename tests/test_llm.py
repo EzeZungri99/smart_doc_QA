@@ -40,7 +40,6 @@ def test_llm_with_relevant_answer():
     query = "What is artificial intelligence?"
     search_results = retriever.search(query, k=2)
     
-    # Debug: print search results
     print(f"   Search results found: {len(search_results)}")
     for i, (chunk, score) in enumerate(search_results):
         print(f"   Result {i+1}: Score {score:.3f}, Text: {chunk.text[:50]}...")
@@ -48,7 +47,6 @@ def test_llm_with_relevant_answer():
     llm = LLMResponseGenerator()
     response = llm.generate_response(query, search_results)
     
-    # Debug: print response details
     print(f"   Response keys: {list(response.keys())}")
     print(f"   Answer: {response.get('answer', 'NO ANSWER')}")
     print(f"   Citations count: {len(response.get('citations', []))}")
@@ -58,7 +56,6 @@ def test_llm_with_relevant_answer():
     assert "citations" in response, "Response missing citations field"
     assert "tokens_used" in response, "Response missing tokens_used field"
     
-    # Make the assertion more flexible - allow empty citations if no relevant chunks found
     if len(search_results) > 0:
         assert len(response["citations"]) > 0, f"Should have citations when search results found. Search results: {len(search_results)}, Citations: {len(response['citations'])}"
     
@@ -71,7 +68,7 @@ def test_llm_with_relevant_answer():
 
 
 def test_llm_without_relevant_answer():
-    text = load_example_text()  # Use example.txt which is now in English
+    text = load_example_text()  
     
     chunker = TextChunker()
     chunks = chunker.create_chunks(text)
