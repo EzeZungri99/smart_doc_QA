@@ -21,7 +21,7 @@ pip install poetry
 
 ### 2. Clone the project
 ```bash
-git clone https://github.com/your-username/smart_doc_QA.git
+git clone https://github.com/EzeZungri99/smart_doc_QA.git
 cd smart_doc_QA
 ```
 
@@ -32,13 +32,8 @@ poetry install
 
 ### 4. Setup Ollama
 ```bash
-# Install Ollama
 curl -fsSL https://ollama.ai/install.sh | sh
-
-# Start Ollama
 ollama serve
-
-# Download the model (in another terminal)
 ollama pull llama2
 ```
 
@@ -48,20 +43,18 @@ ollama pull llama2
 
 **Single question:**
 ```bash
-poetry run python smartqa.py --input document.txt --ask "What is artificial intelligence?"
-```
+# Single question
+poetry run python smartqa.py --input document.txt --ask "What is AI?"
 
 **Interactive mode (multiple questions):**
 ```bash
 poetry run python smartqa.py --input document.txt
-# Then type questions one by one
-# Type 'exit' to quit
 ```
 
 ### Web Interface
-
 ```bash
 ./run_web_app.sh
+# Open http://localhost:8501
 ```
 Then open your browser to `http://localhost:8501`
 
@@ -73,6 +66,7 @@ Then open your browser to `http://localhost:8501`
 
 ### Run All Tests
 ```bash
+# All tests
 poetry run pytest
 ```
 
@@ -116,94 +110,74 @@ smart_doc_QA/
 ├── web_app.py             # Streamlit web interface
 ├── smartqa.py             # Command line interface
 ├── run_web_app.sh         # Web app launcher
-├── example.txt            # Sample document
 └── pyproject.toml         # Poetry configuration
 ```
 
-## Useful Commands
+## Environment Variables
 
-### Development
+- `EMBEDDING_MODEL`: Hugging Face model for embeddings (default: `sentence-transformers/all-MiniLM-L6-v2`)
+- `OLLAMA_MODEL`: Ollama model name (default: `llama2`)
+- `FAISS_INDEX_TYPE`: FAISS index type (default: `IndexFlatIP`)
+
+Example:
 ```bash
-# Install dependencies
-poetry install
+export EMBEDDING_MODEL="sentence-transformers/all-mpnet-base-v2"
+export OLLAMA_MODEL="llama2:7b"
+poetry run python smartqa.py --input document.txt --ask "Question"
+```
 
-# Add new dependency
+## Development
+
+```bash
+# Add dependency
 poetry add package-name
 
-# Add development dependency
+# Add dev dependency
 poetry add --dev package-name
-
-# View installed dependencies
-poetry show
 
 # Update dependencies
 poetry update
-```
 
-### Testing
-```bash
-# Run all tests
-poetry run pytest
-
-# Run tests with coverage
-poetry run pytest --cov=smartqa
-
-# Run specific tests
-poetry run pytest tests/test_chunker.py::test_chunker_basic
-```
-
-### Execution
-```bash
-# CLI with specific document
-poetry run python smartqa.py --input my_document.txt --ask "My question"
-
-# Web app
-poetry run streamlit run web_app.py
-
-# Or use the script
-./run_web_app.sh
+# Show installed packages
+poetry show
 ```
 
 ## Troubleshooting
 
-### Ollama not running
-```bash
-ollama serve
-```
+- **Ollama not running**: `ollama serve`
+- **Model missing**: `ollama pull llama2`
+- **Dependencies**: `poetry install`
+- **Permissions**: `chmod +x run_web_app.sh`
 
-### Model not found
-```bash
-ollama pull llama2
-```
+## Design Decisions
 
-### Missing dependencies
-```bash
-poetry install
-```
+### Offline AI Usage
+- **Decision**: Use local Ollama instead of online APIs
+- **Rationale**: Simpler configuration, higher speed, no token limits
 
-### Permission denied on scripts
-```bash
-chmod +x run_web_app.sh
-```
+### 45-Second Timeout
+- **Decision**: Set 45-second timeout for LLM responses
+- **Rationale**: Proven performance for complex questions, prevents indefinite waits
 
-### Disk space error
-- Clean temporary files
-- Remove old virtual environments
-- Free space in `/tmp`
+### Standardized "No Information" Response
+- **Decision**: Use fixed response when no relevant information is available
+- **Rationale**: Prevents hallucination, maintains accuracy
 
-## Features
+### Complete JSONL Logging
+- **Decision**: Implement comprehensive logging in JSONL format
+- **Rationale**: History without database, user query tracking, debugging capability
 
-- **Intelligent document processing**: Divides documents into meaningful chunks
-- **Semantic search**: Finds relevant information using AI embeddings
-- **Local AI**: Uses Ollama for privacy and speed
-- **Multiple Interfaces**: CLI and web interface
-- **Comprehensive Logging**: Track all interactions and performance
-- **Robust Testing**: Individual and comprehensive test suites
-- **Easy Setup**: Automated dependency installation
+### Paragraph-Based Chunking
+- **Decision**: Split documents by paragraphs rather than character count
+- **Rationale**: Clarity and depth, coherent responses, semantic integrity
+
+### Streamlit for Web UI
+- **Decision**: Use Streamlit instead of traditional web frameworks
+- **Rationale**: Simple UI design, immediate application, fast loading
 
 ## Requirements
 
-- Python 3.11 or higher
-- Ollama installed and running
-- Internet connection (only for initial installation)
+- Python 3.11+
+- Ollama running
+- Internet (initial setup only)
 
