@@ -44,11 +44,11 @@ ollama pull llama2
 **Single question:**
 ```bash
 # Single question
-poetry run python smartqa.py --input document.txt --ask "What is AI?"
+poetry run python smartqa.py --input example.txt --ask "What is AI?"
 
 **Interactive mode (multiple questions):**
 ```bash
-poetry run python smartqa.py --input document.txt
+poetry run python smartqa.py --input example.txt
 ```
 
 ### Web Interface
