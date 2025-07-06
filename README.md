@@ -34,9 +34,12 @@ Document → Chunks → Embeddings → Search Index → Question → Relevant Ch
 # Ubuntu/Debian
 sudo apt update
 sudo apt install python3-pip
+```
 
-# Install Python dependencies (globally)
-pip3 install sentence-transformers faiss-cpu numpy requests pytest
+### Install all Python dependencies with the provided script
+
+```bash
+./install_deps.sh
 ```
 
 ### Clone and Use
@@ -59,6 +62,40 @@ python3 smartqa.py --input document.txt --ask "What is artificial intelligence?"
 # Interactive mode
 python3 smartqa.py --input document.txt
 ```
+
+### Interactive Mode
+
+The interactive mode allows you to have a conversation with your document. It's perfect for exploring and asking multiple questions without reloading the system.
+
+#### How it works:
+1. **One-time setup**: Loads and processes the document once
+2. **REPL interface**: Enter questions one by one
+3. **Multiple questions**: Ask as many questions as you want
+4. **Efficient**: No need to reload the document for each question
+
+#### Commands:
+- Type your question and press Enter
+- Type `exit`, `quit`, or `q` to exit
+- Press `Ctrl+C` to force exit
+
+#### Example interactive session:
+```bash
+❓ Question: What is artificial intelligence?
+📝 ANSWER: Artificial intelligence (AI) is a branch of computer science...
+
+❓ Question: How does machine learning work?
+📝 ANSWER: Machine learning is a subcategory of AI that allows computers...
+
+❓ Question: What are the applications of AI?
+📝 ANSWER: AI has various applications including chatbots, natural language...
+
+❓ Question: exit
+👋 Goodbye!
+```
+
+#### When to use each mode:
+- **`--ask` mode**: For a quick, specific question
+- **Interactive mode**: For exploring the document with multiple questions
 
 ### Programmatic Usage
 
@@ -165,22 +202,6 @@ smart_doc_QA/
 └── README.md
 ```
 
-## Example Document
-
-Create a text file (e.g., `example.txt`) with content like:
-
-```
-Artificial intelligence (AI) is a branch of computer science that seeks to create systems capable of performing tasks that normally require human intelligence.
-
-Machine learning is a subcategory of AI that allows computers to learn and improve automatically without being explicitly programmed. Machine learning algorithms build a mathematical model based on sample data to make predictions or decisions.
-
-Chatbots are AI programs designed to simulate human conversations. They use natural language processing to understand and respond to user queries. Modern chatbots can handle complex queries and provide useful responses.
-```
-
-Then run:
-```bash
-python3 smartqa.py --input example.txt --ask "What is artificial intelligence?"
-```
 
 ## Troubleshooting
 
@@ -190,10 +211,25 @@ python3 smartqa.py --input example.txt --ask "What is artificial intelligence?"
 - Verify the model name matches what's in the code
 
 ### Import Errors
-- Ensure all dependencies are installed: `pip3 install sentence-transformers faiss-cpu numpy requests pytest`
+- Ensure all dependencies are installed: `./install_deps.sh`
 - Check that you're in the correct directory
 
 ### Performance Issues
 - First runs may be slower as models are loaded
 - Reduce the number of chunks retrieved by changing `k` in the search
 - Use smaller documents for faster processing
+
+**Examples:**
+
+```bash
+# Reduce chunks retrieved (default k=3, change to k=1 for faster processing)
+python3 smartqa.py --input large_document.txt --ask "What is AI?"
+
+# For very large documents, split them into smaller files
+python3 smartqa.py --input chapter1.txt --ask "What is machine learning?"
+python3 smartqa.py --input chapter2.txt --ask "What are neural networks?"
+
+# Use interactive mode for multiple questions (avoids reloading models)
+python3 smartqa.py --input document.txt
+# Then ask multiple questions in the interactive session
+```
