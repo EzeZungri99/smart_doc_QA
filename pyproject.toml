@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Document question and answer system using embeddings and semantic search"
 authors = ["EzeZungri <ezezungri@gmail.com>"]
 readme = "README.md"
+packages = [{include = "smartqa"}]
 
 [tool.poetry.dependencies]
 python = ">=3.11,<4.0"

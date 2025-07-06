@@ -21,3 +21,13 @@ Thumbs.db
 # IDEs
 .vscode/
 .idea/
+*.swp
+*.swo
+
+# Pyright cache
+.pyright/
+
+# Python cache
+.pytest_cache/
+.coverage
+htmlcov/
